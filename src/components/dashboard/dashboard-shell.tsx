@@ -19,6 +19,18 @@ function daysUntil(iso: string): number {
   return Math.round((d.getTime() - today.getTime()) / 86_400_000)
 }
 
+function safeHttpUrl(raw: string | null): string | null {
+  if (!raw) return null
+  const trimmed = raw.trim()
+  if (!trimmed) return null
+  try {
+    const u = new URL(trimmed)
+    return (u.protocol === 'http:' || u.protocol === 'https:') ? u.toString() : null
+  } catch {
+    return null
+  }
+}
+
 const grassBackPoints: [number, number][] = [
   [0,50],[10,28],[25,32],[40,24],[55,30],[70,26],[85,35],[100,25],
   [115,33],[130,27],[145,30],[160,28],[175,32],[180,50],
@@ -203,6 +215,7 @@ function CatCard({ app, accentIndex=0, showCompany=false, onToggleTask, onEdit }
   const isBookmarked = app.status === 'Bookmarked'
   const showDeadline = isBookmarked && deadlineDays !== null && deadlineDays <= 14
   const deadlineColor = deadlineDays !== null ? (deadlineDays < 0 ? '#e03030' : deadlineDays <= 1 ? '#d07020' : '#8070b0') : '#8070b0'
+  const safeLink = safeHttpUrl(app.link)
 
   return (
     <div className="cat-card" style={{
@@ -247,7 +260,7 @@ function CatCard({ app, accentIndex=0, showCompany=false, onToggleTask, onEdit }
         <div className="flex gap-2 flex-wrap">
           {app.type && <span className="text-[15px] font-bold opacity-40 uppercase tracking-wider">{app.type}</span>}
           {app.applied_date && <span className="text-[13px] font-bold opacity-35 uppercase">📅 {app.applied_date}</span>}
-          {app.link && <a href={app.link} target="_blank" rel="noopener noreferrer" className="text-[9px] font-bold opacity-55 hover:opacity-90 transition-opacity uppercase" style={{ color:ac.bar }}>↗ Link</a>}
+          {safeLink && <a href={safeLink} target="_blank" rel="noopener noreferrer" className="text-[9px] font-bold opacity-55 hover:opacity-90 transition-opacity uppercase" style={{ color:ac.bar }}>↗ Link</a>}
           {app.vault_folder_name && <span className="text-[13px] font-bold opacity-50 uppercase" style={{ color:ac.bar }}>📁 {app.vault_folder_name}</span>}
         </div>
         {app.notes && <p className="text-[13px] opacity-45 italic leading-snug pl-2" style={{ borderLeft:`2px solid ${ac.bar}` }}>{app.notes}</p>}
