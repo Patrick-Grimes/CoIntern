@@ -1,24 +1,69 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## CoIntern
+
+Local-first internship application tracker with a retro / PS1-inspired UI. Your data is stored in your browser via IndexedDB (no backend).
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js (recommended: Node 18+)
+- npm
+
+### Install
+
+```bash
+npm install
+```
+
+### Run (cross-platform)
+
+Start the dev server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3001/` (dashboard at `http://localhost:3001/dashboard`).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Or use the convenience launcher (opens the dashboard automatically):
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run app
+```
+
+### Production build (local)
+
+```bash
+npm run build
+npm run start
+```
+
+Or:
+
+```bash
+npm run app:start
+```
+
+## Data + privacy
+
+- Data is stored in **IndexedDB** in your browser for this origin.
+- Cloning the repo on a new machine will **not** bring your data along automatically.
+- Use the **Export / Import** buttons in the dashboard to move data between machines.
+- `recovery.html` is a standalone recovery tool that can download your IndexedDB data as JSON.
+
+## Windows-only launcher (optional)
+
+If you want a Chrome “app window” launcher on Windows, see:
+
+- `scripts/windows/cointern-launch.bat`
+- `scripts/windows/run_silent.vbs`
+
+## Tech
+
+- Next.js App Router
+- Zustand
+- IndexedDB (`idb`)
+- PWA service worker (`public/sw.js`)
 
 ## Learn More
 

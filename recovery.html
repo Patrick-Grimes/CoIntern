@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CoIntern — Data Recovery</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: #c8c0dc;
+    color: #28203c;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+  .card {
+    background: #e4dff0;
+    border-top: 3px solid #ece8f8;
+    border-left: 3px solid #ece8f8;
+    border-right: 3px solid #7060a0;
+    border-bottom: 3px solid #7060a0;
+    box-shadow: 6px 6px 0 #5848a0;
+    max-width: 520px;
+    width: 100%;
+    padding: 2.5rem;
+    text-align: center;
+  }
+  h1 { font-size: 1.8rem; margin-bottom: .25rem; }
+  .sub { font-size: .7rem; opacity: .4; text-transform: uppercase; letter-spacing: .15em; margin-bottom: 1.5rem; }
+  .status { font-size: .85rem; margin: 1rem 0; min-height: 1.5em; }
+  .status.ok { color: #508060; }
+  .status.err { color: #c03030; }
+  .status.info { opacity: .6; }
+  .counts { font-size: .8rem; opacity: .55; margin-bottom: 1.5rem; }
+  button {
+    font-family: inherit;
+    font-weight: 700;
+    font-size: .85rem;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    border: none;
+    cursor: pointer;
+    padding: .75rem 2rem;
+    background: #a898c8;
+    color: #fff;
+    border-top: 2px solid #ccc0e8;
+    border-left: 2px solid #ccc0e8;
+    border-right: 2px solid #7060a0;
+    border-bottom: 2px solid #7060a0;
+    box-shadow: 3px 3px 0 #5848a0;
+    transition: transform .05s, box-shadow .05s;
+  }
+  button:active { transform: translate(3px,3px); box-shadow: none; }
+  button:disabled { opacity: .4; cursor: not-allowed; }
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>CoIntern Recovery</h1>
+  <p class="sub">IndexedDB data extraction tool</p>
+  <p class="status info" id="status">Press the button to read your data from IndexedDB.</p>
+  <p class="counts" id="counts"></p>
+  <button id="btn" onclick="recover()">Download Backup</button>
+</div>
+<script>
+async function recover() {
+  var btn = document.getElementById('btn');
+  var status = document.getElementById('status');
+  var counts = document.getElementById('counts');
+  btn.disabled = true;
+  status.className = 'status info';
+  status.textContent = 'Opening IndexedDB…';
+
+  try {
+    var db = await new Promise(function(resolve, reject) {
+      var req = indexedDB.open('cointern', 2);
+      req.onupgradeneeded = function() {
+        reject(new Error('Database does not exist on this origin — nothing to recover.'));
+        req.transaction.abort();
+      };
+      req.onsuccess = function() { resolve(req.result); };
+      req.onerror = function() { reject(req.error); };
+    });
+
+    status.textContent = 'Reading data…';
+
+    var companies = await readStore(db, 'companies');
+    var applications = await readStore(db, 'applications');
+    var action_items = await readStore(db, 'action_items');
+    db.close();
+
+    counts.textContent = companies.length + ' companies, ' +
+      applications.length + ' applications, ' +
+      action_items.length + ' action items';
+
+    if (applications.length === 0 && companies.length === 0) {
+      status.className = 'status err';
+      status.textContent = 'Database is empty — no data to recover.';
+      btn.disabled = false;
+      return;
+    }
+
+    var backup = {
+      version: 2,
+      exported_at: new Date().toISOString(),
+      companies: companies,
+      applications: applications,
+      action_items: action_items
+    };
+
+    var blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'cointern-recovery-' + new Date().toISOString().slice(0, 10) + '.json';
+    a.click();
+    URL.revokeObjectURL(url);
+
+    status.className = 'status ok';
+    status.textContent = 'Backup downloaded successfully!';
+  } catch (e) {
+    status.className = 'status err';
+    status.textContent = 'Error: ' + e.message;
+  }
+  btn.disabled = false;
+}
+
+function readStore(db, storeName) {
+  return new Promise(function(resolve, reject) {
+    var tx = db.transaction(storeName, 'readonly');
+    var store = tx.objectStore(storeName);
+    var req = store.getAll();
+    req.onsuccess = function() { resolve(req.result); };
+    req.onerror = function() { reject(req.error); };
+  });
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+{
+  "name": "CoIntern | Command Center",
+  "short_name": "CoIntern",
+  "description": "Your local-first internship tracker. Low-poly dreamy PS1 aesthetic.",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#f0eaf8",
+  "theme_color": "#a898c8",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Log New Internship",
+      "url": "/dashboard?action=log",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}
