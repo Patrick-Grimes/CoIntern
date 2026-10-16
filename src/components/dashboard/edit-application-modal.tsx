@@ -20,7 +20,7 @@ const ALL_TYPES: ApplicationType[] = [
 const ALL_MODES: ApplicationMode[] = ['Ongoing', 'Submitted']
 
 const inputClass =
-  'bg-white/60 text-sm font-mono w-full px-3 py-2 focus:outline-none transition-colors placeholder:opacity-30 ' +
+  'bg-white/60 text-sm font-mono w-full px-3 py-2 focus:outline-none transition-colors placeholder-readable ' +
   'border-t-2 border-l-2 border-t-[#faf8ff] border-l-[#faf8ff] ' +
   'border-r-2 border-b-2 border-r-[#8070b0] border-b-[#8070b0]'
 
@@ -32,7 +32,7 @@ const selectClass =
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="flex flex-col gap-1">
-      <label className="text-[9px] font-black uppercase tracking-widest opacity-50">{label}</label>
+      <label className="text-[9px] font-black uppercase tracking-widest text-soft">{label}</label>
       {children}
     </div>
   )
@@ -118,11 +118,11 @@ export function EditApplicationModal({ app, isOpen, onClose, onSave, onDelete }:
 
           <div className="px-7 pt-5 pb-4 flex justify-between items-start border-b-2 border-[#b0a0d0]/30">
             <div>
-              <p className="text-[9px] font-black uppercase tracking-widest text-dt-lavender opacity-55 mb-0.5">Edit Entry</p>
-              <h2 className="text-xl font-black tracking-tighter">EDIT_POSITION<span className="text-dt-lavender animate-pulse">_</span></h2>
-              <p className="text-[9px] opacity-35 mt-0.5">{form.company_name}</p>
+              <p className="text-[9px] font-black uppercase tracking-widest text-dt-lavender-shd mb-0.5">Edit Entry</p>
+              <h2 className="text-xl font-black tracking-tighter">EDIT_POSITION<span className="text-dt-lavender-shd animate-pulse">_</span></h2>
+              <p className="text-[9px] text-soft mt-0.5">{form.company_name}</p>
             </div>
-            <button onClick={onClose} className="text-foreground/30 hover:text-foreground/70 transition-colors font-black text-xl leading-none mt-1">✕</button>
+            <button onClick={onClose} className="text-foreground/55 hover:text-foreground/90 transition-colors font-black text-xl leading-none mt-1">✕</button>
           </div>
 
           <div className="px-7 py-5 flex flex-col gap-4 flex-1">
@@ -141,7 +141,7 @@ export function EditApplicationModal({ app, isOpen, onClose, onSave, onDelete }:
                   <select className={selectClass} value={form.status} onChange={e => set('status', e.target.value as ApplicationStatus)}>
                     {ALL_STATUSES.map(s => <option key={s}>{s}</option>)}
                   </select>
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none opacity-40 text-xs">▾</span>
+                  <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-soft text-xs">▾</span>
                 </div>
               </Field>
               <Field label="Type">
@@ -149,7 +149,7 @@ export function EditApplicationModal({ app, isOpen, onClose, onSave, onDelete }:
                   <select className={selectClass} value={form.type} onChange={e => set('type', e.target.value as ApplicationType)}>
                     {ALL_TYPES.map(t => <option key={t}>{t}</option>)}
                   </select>
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none opacity-40 text-xs">▾</span>
+                  <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-soft text-xs">▾</span>
                 </div>
               </Field>
             </div>
@@ -170,7 +170,7 @@ export function EditApplicationModal({ app, isOpen, onClose, onSave, onDelete }:
                   <select className={selectClass} value={form.mode} onChange={e => set('mode', e.target.value as ApplicationMode)}>
                     {ALL_MODES.map(m => <option key={m}>{m}</option>)}
                   </select>
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none opacity-40 text-xs">▾</span>
+                  <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-soft text-xs">▾</span>
                 </div>
               </Field>
             </div>
@@ -191,7 +191,7 @@ export function EditApplicationModal({ app, isOpen, onClose, onSave, onDelete }:
             {/* ← NEW: Local file picker */}
             <Field label="CV / Vault — Local File">
               <div className="flex gap-2 items-center">
-                <div className={`${inputClass} flex-1 opacity-60 cursor-default`}>
+                <div className={`${inputClass} flex-1 text-soft cursor-default`}>
                   {form.vault_folder_name ?? 'No file selected'}
                 </div>
                 <button
@@ -204,10 +204,10 @@ export function EditApplicationModal({ app, isOpen, onClose, onSave, onDelete }:
                 </button>
                 {form.vault_folder_name && (
                   <button type="button" onClick={() => set('vault_folder_name', null)}
-                    className="text-foreground/30 hover:text-foreground/60 font-black shrink-0">✕</button>
+                    className="text-foreground/55 hover:text-foreground/85 font-black shrink-0">✕</button>
                 )}
               </div>
-              <p className="text-[8px] opacity-30 mt-0.5">Requires Chrome or Edge · file name saved for display only</p>
+              <p className="text-[8px] text-soft mt-0.5">Requires Chrome or Edge · file name saved for display only</p>
             </Field>
 
           </div>
@@ -215,7 +215,7 @@ export function EditApplicationModal({ app, isOpen, onClose, onSave, onDelete }:
           <div className="px-7 pb-6 flex items-center justify-between gap-3 border-t-2 border-[#b0a0d0]/20 pt-4">
             <div>
               {!confirmDelete ? (
-                <button onClick={() => setConfirmDelete(true)} className="text-[10px] font-black uppercase tracking-wider text-red-400/60 hover:text-red-500 transition-colors">
+                <button onClick={() => setConfirmDelete(true)} className="text-[10px] font-black uppercase tracking-wider text-red-500/80 hover:text-red-600 transition-colors">
                   Delete Entry
                 </button>
               ) : (
