@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// CoIntern — Core Types
+// ApplyOS — Core Types
 // ─────────────────────────────────────────────────────────────────────────────
 
 export type ApplicationStatus =
@@ -12,7 +12,14 @@ export type ApplicationStatus =
   | 'Rejected'
   | 'Withdrawn'
 
-export type ApplicationType = 'Internship' | 'Co-op' | 'New Grad' | 'Fellowship'
+export type ApplicationType =
+  | 'Internship'
+  | 'Full-time'
+  | 'Part-time'
+  | 'Co-op'
+  | 'Contract'
+  | 'Fellowship'
+
 export type ApplicationMode = 'Ongoing' | 'Submitted'
 
 export interface Company {
@@ -67,7 +74,7 @@ export const STATUS_COLORS: Record<ApplicationStatus, string> = {
 }
 
 // ── Export/Import shape ───────────────────────────────────────────────────────
-export interface CoInternExport {
+export interface ApplyOSExport {
   version: 2
   exported_at: string
   companies: Company[]

@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import { VT323, Rubik } from 'next/font/google'
 import './globals.css'
-import { PWARegistrar } from '@/components/PWARegistrar'
 
 // ── Fonts ─────────────────────────────────────────────────────────────────────
 // VT323 — PS1 / retro pixel display font for headers + UI chrome
@@ -21,18 +20,11 @@ const rubik = Rubik({
 
 // ── Metadata ──────────────────────────────────────────────────────────────────
 export const metadata: Metadata = {
-  title: 'CoIntern | Command Center',
-  description: 'Your local-first internship tracker. Low-poly dreamy PS1 aesthetic.',
-  manifest: '/manifest.json',
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: 'default',
-    title: 'CoIntern',
-  },
-  // Open Graph (looks nice if you ever share a link)
+  title: 'ApplyOS',
+  description: 'Your local-first application tracker. Low-poly dreamy PS1 aesthetic.',
   openGraph: {
-    title: 'CoIntern',
-    description: 'Internship command center',
+    title: 'ApplyOS',
+    description: 'Application command center',
     type: 'website',
   },
 }
@@ -49,17 +41,8 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${vt323.variable} ${rubik.variable}`}>
-      <head>
-        {/* Apple touch icon for home-screen install on iOS */}
-        <link rel="apple-touch-icon" href="/icon-192.png" />
-        {/* Explicit meta for iOS standalone mode */}
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-      </head>
       <body className="antialiased">
         {children}
-        {/* Registers the service worker + shows the install banner */}
-        <PWARegistrar />
       </body>
     </html>
   )

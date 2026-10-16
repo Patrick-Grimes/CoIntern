@@ -3,7 +3,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useStore, useTree } from '@/lib/store'
 import { runMigrationIfNeeded } from '@/lib/migrate'
-import type { Application, ApplicationStatus, EnrichedApplication, CompanyWithApplications, CoInternExport } from '@/app/types'
+import type { Application, ApplicationStatus, EnrichedApplication, CompanyWithApplications, ApplyOSExport } from '@/app/types'
 import { STATUS_COLORS } from '@/app/types'
 import { LogPositionModal } from './log-position-modal'
 import { EditApplicationModal } from './edit-application-modal'
@@ -352,10 +352,10 @@ function EmptyState({ onAdd }: { onAdd: () => void }) {
       <div className="absolute top-0 left-0 right-0 h-2" style={{ background:'linear-gradient(90deg,#a898c8,#c4b4d8,#9aab98)', borderBottom:'1px solid #7060a0' }} />
       <div className="text-4xl opacity-15 select-none mt-2">◈ ◉ ◇</div>
       <div>
-        <p className="font-black text-xl tracking-tight mb-1" style={{ color:'#a898c8' }}>NO_RECORDS_FOUND</p>
-        <p className="text-xs opacity-35 font-mono">{'// awaiting your first position log'}</p>
+        <p className="font-black text-xl tracking-tight mb-1" style={{ color:'#a898c8' }}>Your applications</p>
+        <p className="text-xs opacity-35 font-mono">{'// add your first application to get started'}</p>
       </div>
-      <button onClick={onAdd} className="btn-block btn-ps1-mint px-8 py-3 text-sm">+ LOG_FIRST_POSITION</button>
+      <button onClick={onAdd} className="btn-block btn-ps1-mint px-8 py-3 text-sm">+ Add application</button>
     </div>
   )
 }
@@ -371,7 +371,7 @@ function DataBar() {
     const blob = new Blob([JSON.stringify(data, null, 2)], { type:'application/json' })
     const url  = URL.createObjectURL(blob)
     const a    = document.createElement('a')
-    a.href = url; a.download = `cointern-backup-${new Date().toISOString().slice(0,10)}.json`
+    a.href = url; a.download = `applyos-backup-${new Date().toISOString().slice(0,10)}.json`
     a.click(); URL.revokeObjectURL(url)
     setMsg('Exported ✓'); setTimeout(() => setMsg(null), 2500)
   }
@@ -380,7 +380,7 @@ function DataBar() {
     const file = e.target.files?.[0]; if (!file) return
     try {
       const text = await file.text()
-      const data = JSON.parse(text) as CoInternExport
+      const data = JSON.parse(text) as ApplyOSExport
       if (data.version !== 2) throw new Error('Unknown version')
       await importData(data)
       setMsg(`Imported ${data.applications.length} entries ✓`)
@@ -420,8 +420,8 @@ export function DashboardShell() {
     async function init() { await runMigrationIfNeeded(); await hydrate() }
     init()
     const handler = () => setIsAddOpen(true)
-    window.addEventListener('cointern:open-log', handler)
-    return () => window.removeEventListener('cointern:open-log', handler)
+    window.addEventListener('applyos:open-log', handler)
+    return () => window.removeEventListener('applyos:open-log', handler)
   }, [hydrate])
 
   const dueSoon = useMemo(() =>
@@ -483,8 +483,8 @@ export function DashboardShell() {
             <div className="absolute top-0 left-0 right-0 h-2" style={{ background:'linear-gradient(90deg,#7868b0,#a898c8,#7868b0)' }} />
             <div className="mt-2">
               <div className="flex items-center gap-2 mb-1"><span className="pulse-dot" /><span className="text-[9px] font-bold uppercase tracking-widest opacity-40">System Online</span></div>
-              <h1 className="text-4xl md:text-5xl font-black tracking-tighter uppercase leading-none title-shimmer">CoIntern</h1>
-              <p className="text-[9px] font-mono opacity-20 mt-0.5">internship_command_center v2.0</p>
+              <h1 className="text-4xl md:text-5xl font-black tracking-tighter uppercase leading-none title-shimmer">ApplyOS</h1>
+              <p className="text-[9px] font-mono opacity-20 mt-0.5">application_command_center v2.0</p>
             </div>
             <div className="flex items-center gap-3 flex-wrap">
               <StatPill label="Companies"    value={tree.length}       bg="#ccc0e4" lit="#e4dcf8" shd="#7060a0" />
@@ -493,7 +493,7 @@ export function DashboardShell() {
               <StatPill label="Total Tasks"  value={totalTasks}         bg="#c4d8e8" lit="#dceef8" shd="#5080a0" />
             </div>
             <div className="flex flex-col gap-2 items-end shrink-0">
-              <button onClick={() => setIsAddOpen(true)} className="btn-block btn-ps1-lavender px-6 py-3 text-sm w-full">New Internship</button>
+              <button onClick={() => setIsAddOpen(true)} className="btn-block btn-ps1-lavender px-6 py-3 text-sm w-full">Add application</button>
               <DataBar />
             </div>
           </div>
@@ -516,7 +516,7 @@ export function DashboardShell() {
           }
         </div>
         <footer className="mt-16 pb-36 text-center">
-          <p className="text-[9px] font-mono opacity-15 tracking-widest uppercase">cointern // local-first // your data stays yours ◈</p>
+          <p className="text-[9px] font-mono opacity-15 tracking-widest uppercase">applyos // local-first // your data stays yours ◈</p>
         </footer>
       </main>
       <LogPositionModal isOpen={isAddOpen} onClose={() => setIsAddOpen(false)} existingCompanies={tree.map(c => c.name)} onSave={addApplication} />

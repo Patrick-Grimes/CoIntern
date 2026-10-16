@@ -17,7 +17,9 @@ interface LogPositionModalProps {
 const ALL_STATUSES: ApplicationStatus[] = [
   'Bookmarked', 'Applied', 'OA', 'Phone Screen', 'Interview', 'Offer', 'Rejected', 'Withdrawn',
 ]
-const ALL_TYPES: ApplicationType[] = ['Internship', 'Co-op', 'New Grad', 'Fellowship']
+const ALL_TYPES: ApplicationType[] = [
+  'Internship', 'Full-time', 'Part-time', 'Co-op', 'Contract', 'Fellowship',
+]
 const ALL_MODES: ApplicationMode[] = ['Ongoing', 'Submitted']
 
 const inputClass =

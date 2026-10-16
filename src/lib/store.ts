@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// CoIntern — Zustand store  (npm install zustand idb)
+// ApplyOS — Zustand store  (npm install zustand idb)
 //
 // Single source of truth for all app state.
 // Every mutation writes to IndexedDB then updates local state atomically.
@@ -10,7 +10,7 @@ import { v4 as uuid } from 'uuid'
 import type {
   Company, Application, ActionItem,
   CompanyWithApplications,
-  CoInternExport,
+  ApplyOSExport,
 } from '@/app/types'
 import {
   loadAllData, putCompany, putApplication, putActionItem,
@@ -41,7 +41,7 @@ function buildTree(
 
 // ── State shape ───────────────────────────────────────────────────────────────
 
-interface CoInternState {
+interface ApplyOSState {
   // Raw data
   companies: Company[]
   applications: Application[]
@@ -71,14 +71,14 @@ interface CoInternState {
 
   deleteTask: (itemId: string) => Promise<void>
 
-  exportData: () => CoInternExport
+  exportData: () => ApplyOSExport
 
-  importData: (data: CoInternExport) => Promise<void>
+  importData: (data: ApplyOSExport) => Promise<void>
 }
 
 // ── Store ─────────────────────────────────────────────────────────────────────
 
-export const useStore = create<CoInternState>((set, get) => ({
+export const useStore = create<ApplyOSState>((set, get) => ({
   companies:    [],
   applications: [],
   actionItems:  [],
