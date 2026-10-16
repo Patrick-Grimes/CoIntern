@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// CoIntern — IndexedDB layer  (npm install idb)
+// ApplyOS — IndexedDB layer  (npm install idb)
 //
 // Schema v2:
 //   companies    { id, name }
@@ -13,7 +13,7 @@
 import { openDB, DBSchema, IDBPDatabase } from 'idb'
 import type { Company, Application, ActionItem } from '@/app/types'
 
-interface CoInternDB extends DBSchema {
+interface ApplyOSDB extends DBSchema {
   companies: {
     key: string
     value: Company
@@ -34,11 +34,11 @@ interface CoInternDB extends DBSchema {
   }
 }
 
-let _db: IDBPDatabase<CoInternDB> | null = null
+let _db: IDBPDatabase<ApplyOSDB> | null = null
 
-async function getDB(): Promise<IDBPDatabase<CoInternDB>> {
+async function getDB(): Promise<IDBPDatabase<ApplyOSDB>> {
   if (_db) return _db
-  _db = await openDB<CoInternDB>('cointern', 2, {
+  _db = await openDB<ApplyOSDB>('applyos', 2, {
     upgrade(db, oldVersion) {
       // Fresh install
       if (oldVersion < 1) {

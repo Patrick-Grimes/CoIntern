@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// CoIntern — localStorage → IndexedDB migration
+// ApplyOS — localStorage → IndexedDB migration
 //
 // Runs once on first load after upgrading to the IndexedDB version.
 // After migration the localStorage keys are removed so this is a no-op
