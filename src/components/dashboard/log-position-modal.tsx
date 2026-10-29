@@ -23,20 +23,13 @@ const ALL_TYPES: ApplicationType[] = [
 ]
 const ALL_MODES: ApplicationMode[] = ['Ongoing', 'Submitted']
 
-const inputClass =
-  'bg-white/60 text-sm font-mono w-full px-3 py-2 focus:outline-none transition-colors placeholder-readable ' +
-  'border-t-2 border-l-2 border-t-[#faf8ff] border-l-[#faf8ff] ' +
-  'border-r-2 border-b-2 border-r-[#8070b0] border-b-[#8070b0]'
-
-const inputErrorClass =
-  'bg-white/60 text-sm font-mono w-full px-3 py-2 focus:outline-none transition-colors placeholder-readable ' +
-  'border-t-2 border-l-2 border-t-[#faf8ff] border-l-[#faf8ff] ' +
-  'border-r-2 border-b-2 border-r-[#e03030] border-b-[#e03030]'
+const inputClass = 'ps1-input placeholder-readable'
+const inputErrorClass = 'ps1-input-error placeholder-readable'
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="flex flex-col gap-1">
-      <label className="text-[9px] font-black uppercase tracking-widest text-soft">{label}</label>
+      <label className="text-[10px] font-sans font-black uppercase tracking-widest text-soft">{label}</label>
       {children}
     </div>
   )

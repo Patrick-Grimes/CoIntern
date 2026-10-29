@@ -66,13 +66,13 @@ export interface CompanyWithApplications {
 // ── Status colours (Tailwind classes) ────────────────────────────────────────
 export const STATUS_COLORS: Record<ApplicationStatus, string> = {
   Bookmarked:    'border-dt-lavender/60 bg-dt-lavender/20 text-dt-lavender-shd',
-  Applied:       'border-dt-baby-blue/60 bg-dt-baby-blue/20 text-blue-700',
-  OA:            'border-dt-mint/60 bg-dt-mint/20 text-green-700',
-  'Phone Screen':'border-dt-peach/60 bg-dt-peach/20 text-orange-700',
-  Interview:     'border-yellow-400/60 bg-yellow-100 text-yellow-800',
-  Offer:         'border-yellow-500/60 bg-yellow-200 text-yellow-900',
-  Rejected:      'border-gray-400/60 bg-gray-100 text-gray-600',
-  Withdrawn:     'border-gray-300/60 bg-gray-50 text-gray-600',
+  Applied:       'border-dt-baby-blue/60 bg-dt-baby-blue/20 text-[#2a4a68]',
+  OA:            'border-dt-mint/60 bg-dt-mint/20 text-dt-mint-shd',
+  'Phone Screen':'border-dt-peach/60 bg-dt-peach/20 text-dt-peach-shd',
+  Interview:     'border-yellow-500/60 bg-yellow-100 text-yellow-900',
+  Offer:         'border-yellow-600/60 bg-yellow-200 text-[#5c3d00]',
+  Rejected:      'border-gray-400/60 bg-gray-100 text-gray-700',
+  Withdrawn:     'border-gray-300/60 bg-gray-50 text-gray-700',
 }
 
 // ── Export/Import shape ───────────────────────────────────────────────────────
