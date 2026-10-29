@@ -8,6 +8,7 @@ import { STATUS_COLORS } from '@/app/types'
 import { LogPositionModal } from './log-position-modal'
 import { EditApplicationModal } from './edit-application-modal'
 import { ApplicationCat } from './application-cat'
+import { Ps1Select } from '@/components/ui/ps1-select'
 
 const ALL_STATUSES: ApplicationStatus[] = [
   'Bookmarked', 'Applied', 'OA', 'Phone Screen', 'Interview', 'Offer', 'Rejected', 'Withdrawn',
@@ -151,7 +152,16 @@ function FilterBar({ activeStatuses, onToggleStatus, filterCompany, onCompanyCha
   companies: string[]; isFiltered: boolean; onClear: () => void
   searchQuery: string; onSearchChange: (q: string) => void
 }) {
-  const sel = 'bg-[#e0d8f0] border-t-2 border-l-2 border-t-[#ece8fc] border-l-[#ece8fc] border-r-2 border-b-2 border-r-[#7868a8] border-b-[#7868a8] text-[11px] font-black uppercase tracking-wider px-2 py-1 font-mono cursor-pointer focus:outline-none'
+  const companyOptions = [
+    { value: 'All', label: 'All' },
+    ...companies.map(c => ({ value: c, label: c })),
+  ]
+  const sortOptions = [
+    { value: 'date', label: 'Date Added' },
+    { value: 'deadline', label: 'Deadline' },
+    { value: 'company', label: 'Company A-Z' },
+    { value: 'status', label: 'Status' },
+  ]
   return (
     <div className="filter-card p-4 mb-6 relative">
       <div className="absolute top-0 left-0 right-0 h-1.5" style={{ background:'linear-gradient(90deg,#a898c8,#c4b4d8,#9aab98)' }} />
@@ -180,17 +190,21 @@ function FilterBar({ activeStatuses, onToggleStatus, filterCompany, onCompanyCha
         </div>
         <div className="flex flex-wrap gap-3 items-center">
           <span className="text-[9px] font-black uppercase tracking-widest text-soft">Company:</span>
-          <select value={filterCompany} onChange={e => onCompanyChange(e.target.value)} className={sel}>
-            <option value="All">All</option>
-            {companies.map(c => <option key={c} value={c}>{c}</option>)}
-          </select>
+          <Ps1Select
+            size="sm"
+            value={filterCompany}
+            onChange={onCompanyChange}
+            options={companyOptions}
+            aria-label="Filter by company"
+          />
           <span className="text-[9px] font-black uppercase tracking-widest text-soft ml-2">Sort:</span>
-          <select value={sortBy} onChange={e => onSortChange(e.target.value)} className={sel}>
-            <option value="date">Date Added</option>
-            <option value="deadline">Deadline</option>
-            <option value="company">Company A-Z</option>
-            <option value="status">Status</option>
-          </select>
+          <Ps1Select
+            size="sm"
+            value={sortBy}
+            onChange={onSortChange}
+            options={sortOptions}
+            aria-label="Sort applications"
+          />
           {isFiltered && <button onClick={onClear} className="btn-block btn-ps1-ghost px-3 py-1 text-[10px]">CLEAR ✕</button>}
         </div>
       </div>

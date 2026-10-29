@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { Application, ApplicationStatus, ApplicationType, ApplicationMode } from '@/app/types'
+import { Ps1Select } from '@/components/ui/ps1-select'
 
 interface EditApplicationModalProps {
   app: Application | null
@@ -21,11 +22,6 @@ const ALL_MODES: ApplicationMode[] = ['Ongoing', 'Submitted']
 
 const inputClass =
   'bg-white/60 text-sm font-mono w-full px-3 py-2 focus:outline-none transition-colors placeholder-readable ' +
-  'border-t-2 border-l-2 border-t-[#faf8ff] border-l-[#faf8ff] ' +
-  'border-r-2 border-b-2 border-r-[#8070b0] border-b-[#8070b0]'
-
-const selectClass =
-  'bg-white/60 text-sm font-mono w-full px-3 py-2 focus:outline-none transition-colors appearance-none cursor-pointer ' +
   'border-t-2 border-l-2 border-t-[#faf8ff] border-l-[#faf8ff] ' +
   'border-r-2 border-b-2 border-r-[#8070b0] border-b-[#8070b0]'
 
@@ -150,20 +146,20 @@ export function EditApplicationModal({ app, isOpen, onClose, onSave, onDelete }:
 
             <div className="grid grid-cols-2 gap-4">
               <Field label="Status">
-                <div className="relative">
-                  <select className={selectClass} value={form.status} onChange={e => set('status', e.target.value as ApplicationStatus)}>
-                    {ALL_STATUSES.map(s => <option key={s}>{s}</option>)}
-                  </select>
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-soft text-xs">▾</span>
-                </div>
+                <Ps1Select
+                  value={form.status}
+                  onChange={v => set('status', v as ApplicationStatus)}
+                  options={ALL_STATUSES.map(s => ({ value: s, label: s }))}
+                  aria-label="Status"
+                />
               </Field>
               <Field label="Type">
-                <div className="relative">
-                  <select className={selectClass} value={form.type} onChange={e => set('type', e.target.value as ApplicationType)}>
-                    {ALL_TYPES.map(t => <option key={t}>{t}</option>)}
-                  </select>
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-soft text-xs">▾</span>
-                </div>
+                <Ps1Select
+                  value={form.type}
+                  onChange={v => set('type', v as ApplicationType)}
+                  options={ALL_TYPES.map(t => ({ value: t, label: t }))}
+                  aria-label="Type"
+                />
               </Field>
             </div>
 
@@ -179,12 +175,12 @@ export function EditApplicationModal({ app, isOpen, onClose, onSave, onDelete }:
 
             <div className="grid grid-cols-2 gap-4">
               <Field label="Mode">
-                <div className="relative">
-                  <select className={selectClass} value={form.mode} onChange={e => set('mode', e.target.value as ApplicationMode)}>
-                    {ALL_MODES.map(m => <option key={m}>{m}</option>)}
-                  </select>
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-soft text-xs">▾</span>
-                </div>
+                <Ps1Select
+                  value={form.mode}
+                  onChange={v => set('mode', v as ApplicationMode)}
+                  options={ALL_MODES.map(m => ({ value: m, label: m }))}
+                  aria-label="Mode"
+                />
               </Field>
             </div>
 

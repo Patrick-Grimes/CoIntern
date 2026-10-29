@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import type { Application, ActionItem, ApplicationStatus, ApplicationType, ApplicationMode } from '@/app/types'
+import { Ps1Select } from '@/components/ui/ps1-select'
 
 interface LogPositionModalProps {
   isOpen: boolean
@@ -31,11 +32,6 @@ const inputErrorClass =
   'bg-white/60 text-sm font-mono w-full px-3 py-2 focus:outline-none transition-colors placeholder-readable ' +
   'border-t-2 border-l-2 border-t-[#faf8ff] border-l-[#faf8ff] ' +
   'border-r-2 border-b-2 border-r-[#e03030] border-b-[#e03030]'
-
-const selectClass =
-  'bg-white/60 text-sm font-mono w-full px-3 py-2 focus:outline-none transition-colors appearance-none cursor-pointer ' +
-  'border-t-2 border-l-2 border-t-[#faf8ff] border-l-[#faf8ff] ' +
-  'border-r-2 border-b-2 border-r-[#8070b0] border-b-[#8070b0]'
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
@@ -198,31 +194,31 @@ export function LogPositionModal({ isOpen, onClose, existingCompanies, onSave }:
 
             <div className="grid grid-cols-2 gap-4">
               <Field label="Status">
-                <div className="relative">
-                  <select className={selectClass} value={status} onChange={e => setStatus(e.target.value as ApplicationStatus)}>
-                    {ALL_STATUSES.map(s => <option key={s}>{s}</option>)}
-                  </select>
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-soft text-xs">▾</span>
-                </div>
+                <Ps1Select
+                  value={status}
+                  onChange={v => setStatus(v as ApplicationStatus)}
+                  options={ALL_STATUSES.map(s => ({ value: s, label: s }))}
+                  aria-label="Status"
+                />
               </Field>
               <Field label="Type">
-                <div className="relative">
-                  <select className={selectClass} value={type} onChange={e => setType(e.target.value as ApplicationType)}>
-                    {ALL_TYPES.map(t => <option key={t}>{t}</option>)}
-                  </select>
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-soft text-xs">▾</span>
-                </div>
+                <Ps1Select
+                  value={type}
+                  onChange={v => setType(v as ApplicationType)}
+                  options={ALL_TYPES.map(t => ({ value: t, label: t }))}
+                  aria-label="Type"
+                />
               </Field>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <Field label="Mode">
-                <div className="relative">
-                  <select className={selectClass} value={mode} onChange={e => setMode(e.target.value as ApplicationMode)}>
-                    {ALL_MODES.map(m => <option key={m}>{m}</option>)}
-                  </select>
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-soft text-xs">▾</span>
-                </div>
+                <Ps1Select
+                  value={mode}
+                  onChange={v => setMode(v as ApplicationMode)}
+                  options={ALL_MODES.map(m => ({ value: m, label: m }))}
+                  aria-label="Mode"
+                />
               </Field>
               <Field label="Applied Date">
                 <input type="date" className={inputClass} value={appliedDate} onChange={e => setAppliedDate(e.target.value)} />
