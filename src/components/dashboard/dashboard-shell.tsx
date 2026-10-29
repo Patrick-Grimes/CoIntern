@@ -258,7 +258,7 @@ function CatCard({ app, accentIndex=0, showCompany=false, onToggleTask, onEdit }
         </button>
       </div>
       <div className="p-4 flex flex-col gap-2 flex-1 border-t-2" style={{ borderColor:`${ac.shd}40` }}>
-        {showCompany && <p className="text-[9px] font-black uppercase tracking-widest opacity-75" style={{ color:ac.bar }}>{app.company_name}</p>}
+        {showCompany && <p className="text-[9px] font-black uppercase tracking-widest text-foreground">{app.company_name}</p>}
         <div className="flex justify-between items-start gap-2">
           <p className="font-black text-base text-lg text-[25px] leading-tight text-foreground flex-1">{app.position}</p>
           <span className={`status-badge shrink-0 mt-1 ${STATUS_COLORS[app.status as ApplicationStatus]}`}>{app.status}</span>
@@ -284,8 +284,8 @@ function CatCard({ app, accentIndex=0, showCompany=false, onToggleTask, onEdit }
               📍 {app.location}
             </span>
           )}
-          {safeLink && <a href={safeLink} target="_blank" rel="noopener noreferrer" className="text-[9px] font-bold opacity-80 hover:opacity-100 transition-opacity uppercase" style={{ color:ac.bar }}>↗ Link</a>}
-          {app.vault_folder_name && <span className="text-[13px] font-bold opacity-75 uppercase" style={{ color:ac.bar }}>📁 {app.vault_folder_name}</span>}
+          {safeLink && <a href={safeLink} target="_blank" rel="noopener noreferrer" className="text-[9px] font-bold uppercase hover:underline" style={{ color:ac.shd }}>↗ Link</a>}
+          {app.vault_folder_name && <span className="text-[13px] font-bold uppercase text-soft">📁 {app.vault_folder_name}</span>}
         </div>
         {app.notes && <p className="text-[13px] text-softer italic leading-snug pl-2" style={{ borderLeft:`2px solid ${ac.bar}` }}>{app.notes}</p>}
         {total > 0 && (
@@ -306,7 +306,7 @@ function CatCard({ app, accentIndex=0, showCompany=false, onToggleTask, onEdit }
                 <div className="w-3.5 h-3.5 flex items-center justify-center shrink-0 transition-all" style={{ border:item.done?`2px solid #5e9870`:`2px solid ${ac.shd}`, background:item.done?'#8ec8a0':'rgba(255,255,255,0.45)', boxShadow:item.done?'none':`1px 1px 0px ${ac.shd}` }}>
                   {item.done && <svg className="w-2 h-2 text-white" fill="none" viewBox="0 0 10 10"><path d="M1.5 5L4 7.5L8.5 2.5" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>}
                 </div>
-                <span className={`leading-tight transition-opacity ${item.done?'line-through text-soft opacity-70':'text-softer group-hover:opacity-100'}`}>{item.label}</span>
+                <span className={`leading-tight ${item.done?'line-through text-soft':'text-softer'}`}>{item.label}</span>
               </button>
             ))}
           </div>
