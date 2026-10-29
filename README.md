@@ -38,9 +38,19 @@ npm run tauri:dev
 
 ## Build the Mac app
 
-On an Apple Silicon Mac:
+On an Apple Silicon Mac, for the **Readable PS1** UI overhaul (PR #2):
 
 ```bash
+# One-shot: checkout overhaul branch, build, replace Desktop app, relaunch
+chmod +x scripts/rebuild-desktop-applyos.sh
+./scripts/rebuild-desktop-applyos.sh
+```
+
+Or manually:
+
+```bash
+git fetch origin && git checkout cursor/applyos-ui-overhaul-d4c4 && git pull
+git log -1 --oneline   # expect: a2a020b Improve ApplyOS readability...
 npm run tauri:build
 ```
 
@@ -51,6 +61,8 @@ Find the app under:
 ```
 src-tauri/target/aarch64-apple-darwin/release/bundle/macos/ApplyOS.app
 ```
+
+**Important:** rebuilding from `cursor/applyos-native-mac-517c` alone does **not** include the Readable PS1 overhaul — use `cursor/applyos-ui-overhaul-d4c4`. Replace Desktop `ApplyOS.app`, quit the old process, then relaunch.
 
 ### First open (Gatekeeper)
 

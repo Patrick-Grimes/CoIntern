@@ -24,10 +24,11 @@ const TRIGGER_SM =
   'cursor-pointer focus:outline-none min-w-[7rem]'
 
 const TRIGGER_MD =
-  'bg-white/60 text-sm font-mono w-full px-3 py-2 focus:outline-none ' +
+  'bg-white text-[#1c162c] text-sm font-mono w-full px-3 py-2.5 focus:outline-none ' +
+  'focus-visible:shadow-[0_0_0_2px_#a898c8] ' +
   'border-t-2 border-l-2 border-t-[#faf8ff] border-l-[#faf8ff] ' +
   'border-r-2 border-b-2 border-r-[#8070b0] border-b-[#8070b0] ' +
-  'cursor-pointer uppercase tracking-wider font-black'
+  'cursor-pointer uppercase tracking-wider font-black rounded-none'
 
 const MENU =
   'absolute z-50 left-0 right-0 mt-1 max-h-56 overflow-y-auto ' +

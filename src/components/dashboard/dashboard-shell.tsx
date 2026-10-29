@@ -171,7 +171,7 @@ function FilterBar({ activeStatuses, onToggleStatus, filterCompany, onCompanyCha
           <input
             type="text" value={searchQuery} onChange={e => onSearchChange(e.target.value)}
             placeholder="Search company, role, notes…"
-            className="w-full pl-8 pr-8 py-2 text-[11px] font-mono placeholder-readable focus:outline-none bg-white/50"
+            className="w-full pl-8 pr-8 py-2 text-[11px] font-sans placeholder-readable focus:outline-none bg-white text-[#1c162c] border-t-2 border-l-2 border-t-[#faf8ff] border-l-[#faf8ff] border-r-2 border-b-2 border-r-[#8070b0] border-b-[#8070b0]"
             style={{ borderTop:'2px solid #faf8ff', borderLeft:'2px solid #faf8ff', borderRight:'2px solid #8070b0', borderBottom:'2px solid #8070b0' }}
           />
           {searchQuery && (
@@ -258,41 +258,41 @@ function CatCard({ app, accentIndex=0, showCompany=false, onToggleTask, onEdit }
         </button>
       </div>
       <div className="p-4 flex flex-col gap-2 flex-1 border-t-2" style={{ borderColor:`${ac.shd}40` }}>
-        {showCompany && <p className="text-[9px] font-black uppercase tracking-widest text-foreground">{app.company_name}</p>}
+        {showCompany && <p className="text-[10px] font-sans font-black uppercase tracking-widest text-foreground">{app.company_name}</p>}
         <div className="flex justify-between items-start gap-2">
-          <p className="font-black text-base text-lg text-[25px] leading-tight text-foreground flex-1">{app.position}</p>
+          <p className="font-mono font-black text-lg md:text-xl uppercase tracking-tight leading-tight text-foreground flex-1 line-clamp-2">{app.position}</p>
           <span className={`status-badge shrink-0 mt-1 ${STATUS_COLORS[app.status as ApplicationStatus]}`}>{app.status}</span>
         </div>
         {isBookmarked && app.deadline && (
           <div className="flex items-center gap-1">
-            <span className="text-[8px] font-black uppercase tracking-widest" style={{ color:deadlineColor }}>
+            <span className="text-[10px] font-sans font-black uppercase tracking-widest" style={{ color:deadlineColor }}>
               {deadlineDays !== null && (deadlineDays < 0 ? '⚠ OVERDUE' : deadlineDays === 0 ? '⏰ TODAY' : `⏰ ${deadlineDays}d left`)}
             </span>
-            <span className="text-[8px] text-soft">· {app.deadline}</span>
+            <span className="text-[10px] font-sans text-soft">· {app.deadline}</span>
           </div>
         )}
         <div className="flex gap-2 flex-wrap items-center">
-          {app.type && <span className="text-[15px] font-bold text-soft uppercase tracking-wider">{app.type}</span>}
-          {app.applied_date && <span className="text-[13px] font-bold text-soft uppercase">📅 {app.applied_date}</span>}
+          {app.type && <span className="text-[11px] font-sans font-bold text-soft uppercase tracking-wider">{app.type}</span>}
+          {app.applied_date && <span className="text-[11px] font-sans font-bold text-soft uppercase">📅 {app.applied_date}</span>}
           {app.salary && (
-            <span className="text-[13px] font-bold uppercase tracking-wider text-soft" title="Salary (USD)">
+            <span className="text-[11px] font-sans font-bold uppercase tracking-wider text-soft" title="Salary (USD)">
               $ {app.salary}
             </span>
           )}
           {app.location && (
-            <span className="text-[13px] font-bold uppercase tracking-wider text-soft" title="Location">
+            <span className="text-[11px] font-sans font-bold uppercase tracking-wider text-soft" title="Location">
               📍 {app.location}
             </span>
           )}
-          {safeLink && <a href={safeLink} target="_blank" rel="noopener noreferrer" className="text-[9px] font-bold uppercase hover:underline" style={{ color:ac.shd }}>↗ Link</a>}
-          {app.vault_folder_name && <span className="text-[13px] font-bold uppercase text-soft">📁 {app.vault_folder_name}</span>}
+          {safeLink && <a href={safeLink} target="_blank" rel="noopener noreferrer" className="text-[11px] font-sans font-bold uppercase hover:underline" style={{ color:ac.shd }}>↗ Link</a>}
+          {app.vault_folder_name && <span className="text-[11px] font-sans font-bold uppercase text-soft">📁 {app.vault_folder_name}</span>}
         </div>
-        {app.notes && <p className="text-[13px] text-softer italic leading-snug pl-2" style={{ borderLeft:`2px solid ${ac.bar}` }}>{app.notes}</p>}
+        {app.notes && <p className="text-[12px] font-sans text-softer italic leading-snug pl-2" style={{ borderLeft:`2px solid ${ac.bar}` }}>{app.notes}</p>}
         {total > 0 && (
           <div>
             <div className="flex justify-between mb-1">
-              <span className="text-[15px] font-bold uppercase tracking-widest text-soft">Tasks</span>
-              <span className="text-[15px] font-bold text-soft">{done}/{total}</span>
+              <span className="text-[11px] font-sans font-bold uppercase tracking-widest text-soft">Tasks</span>
+              <span className="text-[11px] font-sans font-bold text-soft">{done}/{total}</span>
             </div>
             <div className="w-full h-2 overflow-hidden" style={{ background:'#d0c8e0', border:`1px solid ${ac.shd}`, boxShadow:`1px 1px 0px ${ac.shd}` }}>
               <div className="h-full progress-bar" style={{ width:`${total>0?(done/total)*100:0}%`, background:ac.bar }} />
@@ -302,7 +302,7 @@ function CatCard({ app, accentIndex=0, showCompany=false, onToggleTask, onEdit }
         {total > 0 && (
           <div className="space-y-1.5 mt-0.5">
             {app.action_items.map(item => (
-              <button key={item.id} onClick={() => onToggleTask(item.id)} className="flex items-center gap-2 text-[11px] font-medium w-full text-left group">
+              <button key={item.id} onClick={() => onToggleTask(item.id)} className="flex items-center gap-2 text-[12px] font-sans font-medium w-full text-left group">
                 <div className="w-3.5 h-3.5 flex items-center justify-center shrink-0 transition-all" style={{ border:item.done?`2px solid #5e9870`:`2px solid ${ac.shd}`, background:item.done?'#8ec8a0':'rgba(255,255,255,0.45)', boxShadow:item.done?'none':`1px 1px 0px ${ac.shd}` }}>
                   {item.done && <svg className="w-2 h-2 text-white" fill="none" viewBox="0 0 10 10"><path d="M1.5 5L4 7.5L8.5 2.5" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>}
                 </div>
@@ -311,7 +311,7 @@ function CatCard({ app, accentIndex=0, showCompany=false, onToggleTask, onEdit }
             ))}
           </div>
         )}
-        {total === 0 && <p className="text-[10px] text-soft italic">No tasks yet…</p>}
+        {total === 0 && <p className="text-[11px] font-sans text-soft italic">No tasks yet…</p>}
       </div>
     </div>
   )
