@@ -55,6 +55,7 @@ export function LogPositionModal({ isOpen, onClose, existingCompanies, onSave }:
   const [appliedDate, setAppliedDate] = useState('')
   const [deadline,    setDeadline]    = useState('')
   const [salary,      setSalary]      = useState('')
+  const [location,    setLocation]    = useState('')
   const [link,        setLink]        = useState('')
   const [notes,       setNotes]       = useState('')
   const [tasks,       setTasks]       = useState<string[]>([''])
@@ -75,7 +76,7 @@ export function LogPositionModal({ isOpen, onClose, existingCompanies, onSave }:
     if (isOpen) {
       setCompanyName(''); setPosition(''); setStatus('Bookmarked')
       setType('Internship'); setMode('Ongoing'); setAppliedDate('')
-      setDeadline(''); setSalary(''); setLink(''); setNotes(''); setTasks(['']); setErrors({})
+      setDeadline(''); setSalary(''); setLocation(''); setLink(''); setNotes(''); setTasks(['']); setErrors({})
     }
   }, [isOpen])
 
@@ -121,6 +122,7 @@ export function LogPositionModal({ isOpen, onClose, existingCompanies, onSave }:
           applied_date:      appliedDate || null,
           deadline:          deadline    || null,
           salary:            salary.trim() || null,
+          location:          location.trim() || null,
           link:              link        || null,
           notes:             notes       || null,
           vault_link:        null,
@@ -240,6 +242,15 @@ export function LogPositionModal({ isOpen, onClose, existingCompanies, onSave }:
                 placeholder="$120k–$150k or Competitive"
                 value={salary}
                 onChange={e => setSalary(e.target.value)}
+              />
+            </Field>
+
+            <Field label="Location">
+              <input
+                className={inputClass}
+                placeholder="New York, NY / Remote US"
+                value={location}
+                onChange={e => setLocation(e.target.value)}
               />
             </Field>
 

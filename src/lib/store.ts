@@ -20,9 +20,9 @@ import {
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
-/** Normalize legacy rows missing `salary` (IndexedDB / older exports). */
-function withSalaryDefaults(app: Application): Application {
-  return { ...app, salary: app.salary ?? null }
+/** Normalize legacy rows missing `salary` / `location` (IndexedDB / older exports). */
+function withFieldDefaults(app: Application): Application {
+  return { ...app, salary: app.salary ?? null, location: app.location ?? null }
 }
 
 function buildTree(
@@ -93,7 +93,7 @@ export const useStore = create<ApplyOSState>((set, get) => ({
   // ── hydrate: load from IndexedDB on mount ─────────────────────────────────
   hydrate: async () => {
     const { companies, applications, actionItems } = await loadAllData()
-    const apps = applications.map(withSalaryDefaults)
+    const apps = applications.map(withFieldDefaults)
     set({
       companies,
       applications: apps,
@@ -117,6 +117,7 @@ export const useStore = create<ApplyOSState>((set, get) => ({
     const app: Application = {
       ...appData,
       salary: appData.salary?.trim() || null,
+      location: appData.location?.trim() || null,
       id: uuid(),
       company_id: company.id,
       created_at: new Date().toISOString(),
@@ -165,6 +166,7 @@ export const useStore = create<ApplyOSState>((set, get) => ({
       ...updated,
       company_id: company.id,
       salary: updated.salary?.trim() || null,
+      location: updated.location?.trim() || null,
     }
     await putApplication(finalApp)
 
@@ -252,14 +254,14 @@ export const useStore = create<ApplyOSState>((set, get) => ({
 
   // ── importData ────────────────────────────────────────────────────────────
   importData: async (data) => {
-    const applications = data.applications.map(withSalaryDefaults)
+    const applications = data.applications.map(withFieldDefaults)
     await importAllData({
       companies: data.companies,
       applications,
       actionItems: data.action_items,
     })
     const loaded = await loadAllData()
-    const apps = loaded.applications.map(withSalaryDefaults)
+    const apps = loaded.applications.map(withFieldDefaults)
     set({
       companies: loaded.companies,
       applications: apps,

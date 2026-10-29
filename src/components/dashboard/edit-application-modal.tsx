@@ -67,12 +67,14 @@ async function pickLocalFile(): Promise<{ name: string } | null> {
 }
 
 export function EditApplicationModal({ app, isOpen, onClose, onSave, onDelete }: EditApplicationModalProps) {
-  const [form, setForm] = useState<Application | null>(() => (app ? { ...app, salary: app.salary ?? null } : null))
+  const [form, setForm] = useState<Application | null>(() => (
+    app ? { ...app, salary: app.salary ?? null, location: app.location ?? null } : null
+  ))
   const [confirmDelete, setConfirmDelete] = useState(false)
 
   useEffect(() => {
     if (isOpen && app) {
-      setForm({ ...app, salary: app.salary ?? null })
+      setForm({ ...app, salary: app.salary ?? null, location: app.location ?? null })
       setConfirmDelete(false)
     }
   }, [isOpen, app])
@@ -97,7 +99,11 @@ export function EditApplicationModal({ app, isOpen, onClose, onSave, onDelete }:
 
   function handleSave() {
     if (!form) return
-    onSave({ ...form, salary: form.salary?.trim() || null })
+    onSave({
+      ...form,
+      salary: form.salary?.trim() || null,
+      location: form.location?.trim() || null,
+    })
     onClose()
   }
 
@@ -188,6 +194,15 @@ export function EditApplicationModal({ app, isOpen, onClose, onSave, onDelete }:
                 value={form.salary ?? ''}
                 onChange={e => set('salary', e.target.value || null)}
                 placeholder="$120k–$150k or Competitive"
+              />
+            </Field>
+
+            <Field label="Location">
+              <input
+                className={inputClass}
+                value={form.location ?? ''}
+                onChange={e => set('location', e.target.value || null)}
+                placeholder="New York, NY / Remote US"
               />
             </Field>
 

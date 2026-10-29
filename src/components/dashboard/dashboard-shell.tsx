@@ -265,6 +265,11 @@ function CatCard({ app, accentIndex=0, showCompany=false, onToggleTask, onEdit }
               $ {app.salary}
             </span>
           )}
+          {app.location && (
+            <span className="text-[13px] font-bold uppercase tracking-wider text-soft" title="Location">
+              📍 {app.location}
+            </span>
+          )}
           {safeLink && <a href={safeLink} target="_blank" rel="noopener noreferrer" className="text-[9px] font-bold opacity-80 hover:opacity-100 transition-opacity uppercase" style={{ color:ac.bar }}>↗ Link</a>}
           {app.vault_folder_name && <span className="text-[13px] font-bold opacity-75 uppercase" style={{ color:ac.bar }}>📁 {app.vault_folder_name}</span>}
         </div>

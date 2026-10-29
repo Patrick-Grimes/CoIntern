@@ -40,6 +40,7 @@ export interface Application {
   link: string | null
   notes: string | null
   salary: string | null           // free-text USD (e.g. "120k–150k"); null/empty = hidden
+  location: string | null         // free-text (e.g. "New York, NY", "Remote US"); null/empty = hidden
   vault_link: string | null       // URL (Google Drive / Notion)
   vault_folder_name: string | null // ← NEW: local filename shown after picker
   created_at: string              // ISO timestamp for chronological sort

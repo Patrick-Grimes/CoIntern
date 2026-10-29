@@ -4,7 +4,7 @@
 // Schema v2:
 //   companies    { id, name }
 //   applications { id, company_id, company_name, position, status, type,
-//                  mode, applied_date, deadline, link, notes, salary,
+//                  mode, applied_date, deadline, link, notes, salary, location,
 //                  vault_link, vault_folder_name, created_at }
 //   action_items { id, application_id, label, done }
 //   settings     { key, value }   ← for misc persisted prefs / FS handles
