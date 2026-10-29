@@ -20,6 +20,11 @@ import {
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
+/** Normalize legacy rows missing `salary` (IndexedDB / older exports). */
+function withSalaryDefaults(app: Application): Application {
+  return { ...app, salary: app.salary ?? null }
+}
+
 function buildTree(
   companies: Company[],
   applications: Application[],
@@ -88,11 +93,12 @@ export const useStore = create<ApplyOSState>((set, get) => ({
   // ── hydrate: load from IndexedDB on mount ─────────────────────────────────
   hydrate: async () => {
     const { companies, applications, actionItems } = await loadAllData()
+    const apps = applications.map(withSalaryDefaults)
     set({
       companies,
-      applications,
+      applications: apps,
       actionItems,
-      tree: buildTree(companies, applications, actionItems),
+      tree: buildTree(companies, apps, actionItems),
       isLoaded: true,
     })
   },
@@ -110,6 +116,7 @@ export const useStore = create<ApplyOSState>((set, get) => ({
 
     const app: Application = {
       ...appData,
+      salary: appData.salary?.trim() || null,
       id: uuid(),
       company_id: company.id,
       created_at: new Date().toISOString(),
@@ -154,7 +161,11 @@ export const useStore = create<ApplyOSState>((set, get) => ({
       await putCompany(company)
     }
 
-    const finalApp: Application = { ...updated, company_id: company.id }
+    const finalApp: Application = {
+      ...updated,
+      company_id: company.id,
+      salary: updated.salary?.trim() || null,
+    }
     await putApplication(finalApp)
 
     const newCompanies = companies.find(c => c.id === company!.id)
@@ -241,17 +252,19 @@ export const useStore = create<ApplyOSState>((set, get) => ({
 
   // ── importData ────────────────────────────────────────────────────────────
   importData: async (data) => {
+    const applications = data.applications.map(withSalaryDefaults)
     await importAllData({
       companies: data.companies,
-      applications: data.applications,
+      applications,
       actionItems: data.action_items,
     })
-    const { companies, applications, actionItems } = await loadAllData()
+    const loaded = await loadAllData()
+    const apps = loaded.applications.map(withSalaryDefaults)
     set({
-      companies,
-      applications,
-      actionItems,
-      tree: buildTree(companies, applications, actionItems),
+      companies: loaded.companies,
+      applications: apps,
+      actionItems: loaded.actionItems,
+      tree: buildTree(loaded.companies, apps, loaded.actionItems),
     })
   },
 }))

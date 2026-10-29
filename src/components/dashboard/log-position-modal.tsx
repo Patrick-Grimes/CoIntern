@@ -54,6 +54,7 @@ export function LogPositionModal({ isOpen, onClose, existingCompanies, onSave }:
   const [mode,        setMode]        = useState<ApplicationMode>('Ongoing')
   const [appliedDate, setAppliedDate] = useState('')
   const [deadline,    setDeadline]    = useState('')
+  const [salary,      setSalary]      = useState('')
   const [link,        setLink]        = useState('')
   const [notes,       setNotes]       = useState('')
   const [tasks,       setTasks]       = useState<string[]>([''])
@@ -74,7 +75,7 @@ export function LogPositionModal({ isOpen, onClose, existingCompanies, onSave }:
     if (isOpen) {
       setCompanyName(''); setPosition(''); setStatus('Bookmarked')
       setType('Internship'); setMode('Ongoing'); setAppliedDate('')
-      setDeadline(''); setLink(''); setNotes(''); setTasks(['']); setErrors({})
+      setDeadline(''); setSalary(''); setLink(''); setNotes(''); setTasks(['']); setErrors({})
     }
   }, [isOpen])
 
@@ -119,6 +120,7 @@ export function LogPositionModal({ isOpen, onClose, existingCompanies, onSave }:
           status, type, mode,
           applied_date:      appliedDate || null,
           deadline:          deadline    || null,
+          salary:            salary.trim() || null,
           link:              link        || null,
           notes:             notes       || null,
           vault_link:        null,
@@ -232,13 +234,22 @@ export function LogPositionModal({ isOpen, onClose, existingCompanies, onSave }:
               )}
             </Field>
 
+            <Field label="Salary (USD)">
+              <input
+                className={inputClass}
+                placeholder="$120k–$150k or Competitive"
+                value={salary}
+                onChange={e => setSalary(e.target.value)}
+              />
+            </Field>
+
             <Field label="Job Posting URL">
               <input className={inputClass} placeholder="https://…" value={link} onChange={e => setLink(e.target.value)} />
             </Field>
 
             <Field label="Notes">
               <textarea className={`${inputClass} resize-none`} rows={2}
-                placeholder="Referral contact? Salary range? Interesting role?"
+                placeholder="Referral contact? Interesting role?"
                 value={notes} onChange={e => setNotes(e.target.value)} />
             </Field>
 

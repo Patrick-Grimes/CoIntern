@@ -39,6 +39,7 @@ export interface Application {
   deadline: string | null         // ← NEW: ISO date string e.g. "2025-11-01"
   link: string | null
   notes: string | null
+  salary: string | null           // free-text USD (e.g. "120k–150k"); null/empty = hidden
   vault_link: string | null       // URL (Google Drive / Notion)
   vault_folder_name: string | null // ← NEW: local filename shown after picker
   created_at: string              // ISO timestamp for chronological sort

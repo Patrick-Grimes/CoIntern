@@ -257,9 +257,14 @@ function CatCard({ app, accentIndex=0, showCompany=false, onToggleTask, onEdit }
             <span className="text-[8px] text-soft">· {app.deadline}</span>
           </div>
         )}
-        <div className="flex gap-2 flex-wrap">
+        <div className="flex gap-2 flex-wrap items-center">
           {app.type && <span className="text-[15px] font-bold text-soft uppercase tracking-wider">{app.type}</span>}
           {app.applied_date && <span className="text-[13px] font-bold text-soft uppercase">📅 {app.applied_date}</span>}
+          {app.salary && (
+            <span className="text-[13px] font-bold uppercase tracking-wider text-soft" title="Salary (USD)">
+              $ {app.salary}
+            </span>
+          )}
           {safeLink && <a href={safeLink} target="_blank" rel="noopener noreferrer" className="text-[9px] font-bold opacity-80 hover:opacity-100 transition-opacity uppercase" style={{ color:ac.bar }}>↗ Link</a>}
           {app.vault_folder_name && <span className="text-[13px] font-bold opacity-75 uppercase" style={{ color:ac.bar }}>📁 {app.vault_folder_name}</span>}
         </div>

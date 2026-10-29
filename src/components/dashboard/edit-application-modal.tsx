@@ -67,8 +67,15 @@ async function pickLocalFile(): Promise<{ name: string } | null> {
 }
 
 export function EditApplicationModal({ app, isOpen, onClose, onSave, onDelete }: EditApplicationModalProps) {
-  const [form, setForm] = useState<Application | null>(() => (app ? { ...app } : null))
+  const [form, setForm] = useState<Application | null>(() => (app ? { ...app, salary: app.salary ?? null } : null))
   const [confirmDelete, setConfirmDelete] = useState(false)
+
+  useEffect(() => {
+    if (isOpen && app) {
+      setForm({ ...app, salary: app.salary ?? null })
+      setConfirmDelete(false)
+    }
+  }, [isOpen, app])
 
   useEffect(() => {
     if (!isOpen) return
@@ -90,7 +97,7 @@ export function EditApplicationModal({ app, isOpen, onClose, onSave, onDelete }:
 
   function handleSave() {
     if (!form) return
-    onSave(form)
+    onSave({ ...form, salary: form.salary?.trim() || null })
     onClose()
   }
 
@@ -174,6 +181,15 @@ export function EditApplicationModal({ app, isOpen, onClose, onSave, onDelete }:
                 </div>
               </Field>
             </div>
+
+            <Field label="Salary (USD)">
+              <input
+                className={inputClass}
+                value={form.salary ?? ''}
+                onChange={e => set('salary', e.target.value || null)}
+                placeholder="$120k–$150k or Competitive"
+              />
+            </Field>
 
             <Field label="Job Posting URL">
               <input className={inputClass} value={form.link ?? ''} onChange={e => set('link', e.target.value || null)} placeholder="https://…" />
