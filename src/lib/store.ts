@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// CoIntern — Zustand store  (npm install zustand idb)
+// ApplyOS — Zustand store  (npm install zustand idb)
 //
 // Single source of truth for all app state.
 // Every mutation writes to IndexedDB then updates local state atomically.
@@ -10,7 +10,7 @@ import { v4 as uuid } from 'uuid'
 import type {
   Company, Application, ActionItem,
   CompanyWithApplications,
-  CoInternExport,
+  ApplyOSExport,
 } from '@/app/types'
 import {
   loadAllData, putCompany, putApplication, putActionItem,
@@ -19,6 +19,11 @@ import {
 } from '@/lib/db'
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
+
+/** Normalize legacy rows missing `salary` / `location` (IndexedDB / older exports). */
+function withFieldDefaults(app: Application): Application {
+  return { ...app, salary: app.salary ?? null, location: app.location ?? null }
+}
 
 function buildTree(
   companies: Company[],
@@ -41,7 +46,7 @@ function buildTree(
 
 // ── State shape ───────────────────────────────────────────────────────────────
 
-interface CoInternState {
+interface ApplyOSState {
   // Raw data
   companies: Company[]
   applications: Application[]
@@ -71,14 +76,14 @@ interface CoInternState {
 
   deleteTask: (itemId: string) => Promise<void>
 
-  exportData: () => CoInternExport
+  exportData: () => ApplyOSExport
 
-  importData: (data: CoInternExport) => Promise<void>
+  importData: (data: ApplyOSExport) => Promise<void>
 }
 
 // ── Store ─────────────────────────────────────────────────────────────────────
 
-export const useStore = create<CoInternState>((set, get) => ({
+export const useStore = create<ApplyOSState>((set, get) => ({
   companies:    [],
   applications: [],
   actionItems:  [],
@@ -88,11 +93,12 @@ export const useStore = create<CoInternState>((set, get) => ({
   // ── hydrate: load from IndexedDB on mount ─────────────────────────────────
   hydrate: async () => {
     const { companies, applications, actionItems } = await loadAllData()
+    const apps = applications.map(withFieldDefaults)
     set({
       companies,
-      applications,
+      applications: apps,
       actionItems,
-      tree: buildTree(companies, applications, actionItems),
+      tree: buildTree(companies, apps, actionItems),
       isLoaded: true,
     })
   },
@@ -110,6 +116,8 @@ export const useStore = create<CoInternState>((set, get) => ({
 
     const app: Application = {
       ...appData,
+      salary: appData.salary?.trim() || null,
+      location: appData.location?.trim() || null,
       id: uuid(),
       company_id: company.id,
       created_at: new Date().toISOString(),
@@ -154,7 +162,12 @@ export const useStore = create<CoInternState>((set, get) => ({
       await putCompany(company)
     }
 
-    const finalApp: Application = { ...updated, company_id: company.id }
+    const finalApp: Application = {
+      ...updated,
+      company_id: company.id,
+      salary: updated.salary?.trim() || null,
+      location: updated.location?.trim() || null,
+    }
     await putApplication(finalApp)
 
     const newCompanies = companies.find(c => c.id === company!.id)
@@ -241,17 +254,19 @@ export const useStore = create<CoInternState>((set, get) => ({
 
   // ── importData ────────────────────────────────────────────────────────────
   importData: async (data) => {
+    const applications = data.applications.map(withFieldDefaults)
     await importAllData({
       companies: data.companies,
-      applications: data.applications,
+      applications,
       actionItems: data.action_items,
     })
-    const { companies, applications, actionItems } = await loadAllData()
+    const loaded = await loadAllData()
+    const apps = loaded.applications.map(withFieldDefaults)
     set({
-      companies,
-      applications,
-      actionItems,
-      tree: buildTree(companies, applications, actionItems),
+      companies: loaded.companies,
+      applications: apps,
+      actionItems: loaded.actionItems,
+      tree: buildTree(loaded.companies, apps, loaded.actionItems),
     })
   },
 }))

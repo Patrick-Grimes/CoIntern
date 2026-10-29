@@ -1,81 +1,77 @@
-## CoIntern
+## ApplyOS
 
-Local-first internship application tracker with a retro / PS1-inspired UI. Your data is stored in your browser via IndexedDB (no backend).
+Local-only application tracker for Apple Silicon Macs. Retro / PS1-inspired UI, offline Dock app via Tauri 2 + Next.js static export. Data stays on your machine in IndexedDB.
 
-## Getting Started
+## Prerequisites (macOS Apple Silicon)
 
-### Prerequisites
+- Apple Silicon Mac (`aarch64`)
+- [Node.js](https://nodejs.org/) 18+
+- [Rust](https://rustup.rs/) (stable)
+- Xcode Command Line Tools (`xcode-select --install`)
 
-- Node.js (recommended: Node 18+)
-- npm
+```bash
+# Confirm Apple Silicon Rust target
+rustup target add aarch64-apple-darwin
+```
 
-### Install
+## Install
 
 ```bash
 npm install
 ```
 
-### Run (cross-platform)
+## Develop
 
-Start the dev server:
+Web UI only (browser):
 
 ```bash
 npm run dev
 ```
 
-Open `http://localhost:3001/` (dashboard at `http://localhost:3001/dashboard`).
+Open `http://localhost:3001/` — the dashboard is the entry page.
 
-Or use the convenience launcher (opens the dashboard automatically):
-
-```bash
-npm run app
-```
-
-### Production build (local)
+Native Dock app (requires macOS):
 
 ```bash
-npm run build
-npm run start
+npm run tauri:dev
 ```
 
-Or:
+## Build the Mac app
+
+On an Apple Silicon Mac:
 
 ```bash
-npm run app:start
+npm run tauri:build
 ```
+
+This runs `next build` (static export → `out/`), then packages **ApplyOS.app** for `aarch64-apple-darwin`.
+
+Find the app under:
+
+```
+src-tauri/target/aarch64-apple-darwin/release/bundle/macos/ApplyOS.app
+```
+
+### First open (Gatekeeper)
+
+Unsigned local builds are quarantined. To open:
+
+1. Right-click **ApplyOS.app** → **Open**
+2. Confirm **Open** in the dialog
+
+(Or move it to `/Applications` after the first trusted open.)
 
 ## Data + privacy
 
-- Data is stored in **IndexedDB** in your browser for this origin.
-- Cloning the repo on a new machine will **not** bring your data along automatically.
-- Use the **Export / Import** buttons in the dashboard to move data between machines.
-- `recovery.html` is a standalone recovery tool that can download your IndexedDB data as JSON.
+- Offline at runtime — no network calls from the app.
+- Data lives in IndexedDB (`applyos`) inside the app’s webview store.
+- Use **Export / Import** in the dashboard to back up or move data between machines.
+- `recovery.html` can extract IndexedDB data as JSON if you ever need a standalone recovery path (open it in a browser against the same origin / after importing a backup).
 
-## Windows-only launcher (optional)
-
-If you want a Chrome “app window” launcher on Windows, see:
-
-- `scripts/windows/cointern-launch.bat`
-- `scripts/windows/run_silent.vbs`
+Fresh installs start empty. Use **Add application** on the empty-state CTA to log your first entry.
 
 ## Tech
 
-- Next.js App Router
-- Zustand
-- IndexedDB (`idb`)
-- PWA service worker (`public/sw.js`)
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Next.js App Router (`output: 'export'`) + React Compiler
+- Zustand + IndexedDB (`idb`)
+- Tauri 2 — bundle id `local.applyos.app`, Apple Silicon only

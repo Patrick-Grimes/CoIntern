@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CoIntern — Data Recovery</title>
+<title>ApplyOS — Data Recovery</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -59,7 +59,7 @@
 </head>
 <body>
 <div class="card">
-  <h1>CoIntern Recovery</h1>
+  <h1>ApplyOS Recovery</h1>
   <p class="sub">IndexedDB data extraction tool</p>
   <p class="status info" id="status">Press the button to read your data from IndexedDB.</p>
   <p class="counts" id="counts"></p>
@@ -76,7 +76,7 @@ async function recover() {
 
   try {
     var db = await new Promise(function(resolve, reject) {
-      var req = indexedDB.open('cointern', 2);
+      var req = indexedDB.open('applyos', 2);
       req.onupgradeneeded = function() {
         reject(new Error('Database does not exist on this origin — nothing to recover.'));
         req.transaction.abort();
@@ -115,7 +115,7 @@ async function recover() {
     var url = URL.createObjectURL(blob);
     var a = document.createElement('a');
     a.href = url;
-    a.download = 'cointern-recovery-' + new Date().toISOString().slice(0, 10) + '.json';
+    a.download = 'applyos-recovery-' + new Date().toISOString().slice(0, 10) + '.json';
     a.click();
     URL.revokeObjectURL(url);
 

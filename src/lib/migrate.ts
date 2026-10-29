@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// CoIntern — localStorage → IndexedDB migration
+// ApplyOS — localStorage → IndexedDB migration
 //
 // Runs once on first load after upgrading to the IndexedDB version.
 // After migration the localStorage keys are removed so this is a no-op
@@ -94,6 +94,8 @@ export async function runMigrationIfNeeded(): Promise<boolean> {
     deadline: null,                  // new field, no historical data
     link: old.link ?? null,
     notes: old.notes ?? null,
+    salary: null,                    // new field, no historical data
+    location: null,                  // new field, no historical data
     vault_link: old.vault_link ?? null,
     vault_folder_name: null,         // new field
     created_at: new Date().toISOString(),

@@ -1,15 +1,15 @@
 {
-  "name": "cointern",
+  "name": "applyos",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev -p 3001",
-    "app": "node scripts/launch.mjs dev",
     "build": "next build",
-    "start": "next start -p 3001",
-    "app:start": "node scripts/launch.mjs start",
     "go": "next dev -p 3001",
-    "lint": "eslint"
+    "lint": "eslint",
+    "tauri": "tauri",
+    "tauri:dev": "tauri dev",
+    "tauri:build": "tauri build --target aarch64-apple-darwin"
   },
   "dependencies": {
     "idb": "^8.0.3",
@@ -21,6 +21,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@tauri-apps/cli": "^2",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { Application, ApplicationStatus, ApplicationType, ApplicationMode } from '@/app/types'
+import { Ps1Select } from '@/components/ui/ps1-select'
 
 interface EditApplicationModalProps {
   app: Application | null
@@ -14,23 +15,20 @@ interface EditApplicationModalProps {
 const ALL_STATUSES: ApplicationStatus[] = [
   'Bookmarked', 'Applied', 'OA', 'Phone Screen', 'Interview', 'Offer', 'Rejected', 'Withdrawn',
 ]
-const ALL_TYPES: ApplicationType[] = ['Internship', 'Co-op', 'New Grad', 'Fellowship']
+const ALL_TYPES: ApplicationType[] = [
+  'Internship', 'Full-time', 'Part-time', 'Co-op', 'Contract', 'Fellowship',
+]
 const ALL_MODES: ApplicationMode[] = ['Ongoing', 'Submitted']
 
 const inputClass =
-  'bg-white/60 text-sm font-mono w-full px-3 py-2 focus:outline-none transition-colors placeholder:opacity-30 ' +
-  'border-t-2 border-l-2 border-t-[#faf8ff] border-l-[#faf8ff] ' +
-  'border-r-2 border-b-2 border-r-[#8070b0] border-b-[#8070b0]'
-
-const selectClass =
-  'bg-white/60 text-sm font-mono w-full px-3 py-2 focus:outline-none transition-colors appearance-none cursor-pointer ' +
+  'bg-white/60 text-sm font-mono w-full px-3 py-2 focus:outline-none transition-colors placeholder-readable ' +
   'border-t-2 border-l-2 border-t-[#faf8ff] border-l-[#faf8ff] ' +
   'border-r-2 border-b-2 border-r-[#8070b0] border-b-[#8070b0]'
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="flex flex-col gap-1">
-      <label className="text-[9px] font-black uppercase tracking-widest opacity-50">{label}</label>
+      <label className="text-[9px] font-black uppercase tracking-widest text-soft">{label}</label>
       {children}
     </div>
   )
@@ -65,8 +63,17 @@ async function pickLocalFile(): Promise<{ name: string } | null> {
 }
 
 export function EditApplicationModal({ app, isOpen, onClose, onSave, onDelete }: EditApplicationModalProps) {
-  const [form, setForm] = useState<Application | null>(() => (app ? { ...app } : null))
+  const [form, setForm] = useState<Application | null>(() => (
+    app ? { ...app, salary: app.salary ?? null, location: app.location ?? null } : null
+  ))
   const [confirmDelete, setConfirmDelete] = useState(false)
+
+  useEffect(() => {
+    if (isOpen && app) {
+      setForm({ ...app, salary: app.salary ?? null, location: app.location ?? null })
+      setConfirmDelete(false)
+    }
+  }, [isOpen, app])
 
   useEffect(() => {
     if (!isOpen) return
@@ -88,7 +95,11 @@ export function EditApplicationModal({ app, isOpen, onClose, onSave, onDelete }:
 
   function handleSave() {
     if (!form) return
-    onSave(form)
+    onSave({
+      ...form,
+      salary: form.salary?.trim() || null,
+      location: form.location?.trim() || null,
+    })
     onClose()
   }
 
@@ -116,11 +127,11 @@ export function EditApplicationModal({ app, isOpen, onClose, onSave, onDelete }:
 
           <div className="px-7 pt-5 pb-4 flex justify-between items-start border-b-2 border-[#b0a0d0]/30">
             <div>
-              <p className="text-[9px] font-black uppercase tracking-widest text-dt-lavender opacity-55 mb-0.5">Edit Entry</p>
-              <h2 className="text-xl font-black tracking-tighter">EDIT_POSITION<span className="text-dt-lavender animate-pulse">_</span></h2>
-              <p className="text-[9px] opacity-35 mt-0.5">{form.company_name}</p>
+              <p className="text-[9px] font-black uppercase tracking-widest text-dt-lavender-shd mb-0.5">Edit Entry</p>
+              <h2 className="text-xl font-black tracking-tighter">EDIT_POSITION<span className="text-dt-lavender-shd animate-pulse">_</span></h2>
+              <p className="text-[9px] text-soft mt-0.5">{form.company_name}</p>
             </div>
-            <button onClick={onClose} className="text-foreground/30 hover:text-foreground/70 transition-colors font-black text-xl leading-none mt-1">✕</button>
+            <button onClick={onClose} className="text-foreground/55 hover:text-foreground/90 transition-colors font-black text-xl leading-none mt-1">✕</button>
           </div>
 
           <div className="px-7 py-5 flex flex-col gap-4 flex-1">
@@ -135,20 +146,20 @@ export function EditApplicationModal({ app, isOpen, onClose, onSave, onDelete }:
 
             <div className="grid grid-cols-2 gap-4">
               <Field label="Status">
-                <div className="relative">
-                  <select className={selectClass} value={form.status} onChange={e => set('status', e.target.value as ApplicationStatus)}>
-                    {ALL_STATUSES.map(s => <option key={s}>{s}</option>)}
-                  </select>
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none opacity-40 text-xs">▾</span>
-                </div>
+                <Ps1Select
+                  value={form.status}
+                  onChange={v => set('status', v as ApplicationStatus)}
+                  options={ALL_STATUSES.map(s => ({ value: s, label: s }))}
+                  aria-label="Status"
+                />
               </Field>
               <Field label="Type">
-                <div className="relative">
-                  <select className={selectClass} value={form.type} onChange={e => set('type', e.target.value as ApplicationType)}>
-                    {ALL_TYPES.map(t => <option key={t}>{t}</option>)}
-                  </select>
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none opacity-40 text-xs">▾</span>
-                </div>
+                <Ps1Select
+                  value={form.type}
+                  onChange={v => set('type', v as ApplicationType)}
+                  options={ALL_TYPES.map(t => ({ value: t, label: t }))}
+                  aria-label="Type"
+                />
               </Field>
             </div>
 
@@ -164,14 +175,32 @@ export function EditApplicationModal({ app, isOpen, onClose, onSave, onDelete }:
 
             <div className="grid grid-cols-2 gap-4">
               <Field label="Mode">
-                <div className="relative">
-                  <select className={selectClass} value={form.mode} onChange={e => set('mode', e.target.value as ApplicationMode)}>
-                    {ALL_MODES.map(m => <option key={m}>{m}</option>)}
-                  </select>
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none opacity-40 text-xs">▾</span>
-                </div>
+                <Ps1Select
+                  value={form.mode}
+                  onChange={v => set('mode', v as ApplicationMode)}
+                  options={ALL_MODES.map(m => ({ value: m, label: m }))}
+                  aria-label="Mode"
+                />
               </Field>
             </div>
+
+            <Field label="Salary (USD)">
+              <input
+                className={inputClass}
+                value={form.salary ?? ''}
+                onChange={e => set('salary', e.target.value || null)}
+                placeholder="$120k–$150k or Competitive"
+              />
+            </Field>
+
+            <Field label="Location">
+              <input
+                className={inputClass}
+                value={form.location ?? ''}
+                onChange={e => set('location', e.target.value || null)}
+                placeholder="New York, NY / Remote US"
+              />
+            </Field>
 
             <Field label="Job Posting URL">
               <input className={inputClass} value={form.link ?? ''} onChange={e => set('link', e.target.value || null)} placeholder="https://…" />
@@ -189,7 +218,7 @@ export function EditApplicationModal({ app, isOpen, onClose, onSave, onDelete }:
             {/* ← NEW: Local file picker */}
             <Field label="CV / Vault — Local File">
               <div className="flex gap-2 items-center">
-                <div className={`${inputClass} flex-1 opacity-60 cursor-default`}>
+                <div className={`${inputClass} flex-1 text-soft cursor-default`}>
                   {form.vault_folder_name ?? 'No file selected'}
                 </div>
                 <button
@@ -202,10 +231,10 @@ export function EditApplicationModal({ app, isOpen, onClose, onSave, onDelete }:
                 </button>
                 {form.vault_folder_name && (
                   <button type="button" onClick={() => set('vault_folder_name', null)}
-                    className="text-foreground/30 hover:text-foreground/60 font-black shrink-0">✕</button>
+                    className="text-foreground/55 hover:text-foreground/85 font-black shrink-0">✕</button>
                 )}
               </div>
-              <p className="text-[8px] opacity-30 mt-0.5">Requires Chrome or Edge · file name saved for display only</p>
+              <p className="text-[8px] text-soft mt-0.5">Requires Chrome or Edge · file name saved for display only</p>
             </Field>
 
           </div>
@@ -213,7 +242,7 @@ export function EditApplicationModal({ app, isOpen, onClose, onSave, onDelete }:
           <div className="px-7 pb-6 flex items-center justify-between gap-3 border-t-2 border-[#b0a0d0]/20 pt-4">
             <div>
               {!confirmDelete ? (
-                <button onClick={() => setConfirmDelete(true)} className="text-[10px] font-black uppercase tracking-wider text-red-400/60 hover:text-red-500 transition-colors">
+                <button onClick={() => setConfirmDelete(true)} className="text-[10px] font-black uppercase tracking-wider text-red-500/80 hover:text-red-600 transition-colors">
                   Delete Entry
                 </button>
               ) : (

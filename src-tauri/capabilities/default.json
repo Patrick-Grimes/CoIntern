@@ -1,0 +1,8 @@
+{
+  "identifier": "default",
+  "description": "Local assets only — no remote URL access",
+  "windows": ["main"],
+  "permissions": [
+    "core:default"
+  ]
+}

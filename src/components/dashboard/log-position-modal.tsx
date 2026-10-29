@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import type { Application, ActionItem, ApplicationStatus, ApplicationType, ApplicationMode } from '@/app/types'
+import { Ps1Select } from '@/components/ui/ps1-select'
 
 interface LogPositionModalProps {
   isOpen: boolean
@@ -17,28 +18,25 @@ interface LogPositionModalProps {
 const ALL_STATUSES: ApplicationStatus[] = [
   'Bookmarked', 'Applied', 'OA', 'Phone Screen', 'Interview', 'Offer', 'Rejected', 'Withdrawn',
 ]
-const ALL_TYPES: ApplicationType[] = ['Internship', 'Co-op', 'New Grad', 'Fellowship']
+const ALL_TYPES: ApplicationType[] = [
+  'Internship', 'Full-time', 'Part-time', 'Co-op', 'Contract', 'Fellowship',
+]
 const ALL_MODES: ApplicationMode[] = ['Ongoing', 'Submitted']
 
 const inputClass =
-  'bg-white/60 text-sm font-mono w-full px-3 py-2 focus:outline-none transition-colors placeholder:opacity-30 ' +
+  'bg-white/60 text-sm font-mono w-full px-3 py-2 focus:outline-none transition-colors placeholder-readable ' +
   'border-t-2 border-l-2 border-t-[#faf8ff] border-l-[#faf8ff] ' +
   'border-r-2 border-b-2 border-r-[#8070b0] border-b-[#8070b0]'
 
 const inputErrorClass =
-  'bg-white/60 text-sm font-mono w-full px-3 py-2 focus:outline-none transition-colors placeholder:opacity-30 ' +
+  'bg-white/60 text-sm font-mono w-full px-3 py-2 focus:outline-none transition-colors placeholder-readable ' +
   'border-t-2 border-l-2 border-t-[#faf8ff] border-l-[#faf8ff] ' +
   'border-r-2 border-b-2 border-r-[#e03030] border-b-[#e03030]'
-
-const selectClass =
-  'bg-white/60 text-sm font-mono w-full px-3 py-2 focus:outline-none transition-colors appearance-none cursor-pointer ' +
-  'border-t-2 border-l-2 border-t-[#faf8ff] border-l-[#faf8ff] ' +
-  'border-r-2 border-b-2 border-r-[#8070b0] border-b-[#8070b0]'
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="flex flex-col gap-1">
-      <label className="text-[9px] font-black uppercase tracking-widest opacity-50">{label}</label>
+      <label className="text-[9px] font-black uppercase tracking-widest text-soft">{label}</label>
       {children}
     </div>
   )
@@ -52,6 +50,8 @@ export function LogPositionModal({ isOpen, onClose, existingCompanies, onSave }:
   const [mode,        setMode]        = useState<ApplicationMode>('Ongoing')
   const [appliedDate, setAppliedDate] = useState('')
   const [deadline,    setDeadline]    = useState('')
+  const [salary,      setSalary]      = useState('')
+  const [location,    setLocation]    = useState('')
   const [link,        setLink]        = useState('')
   const [notes,       setNotes]       = useState('')
   const [tasks,       setTasks]       = useState<string[]>([''])
@@ -72,7 +72,7 @@ export function LogPositionModal({ isOpen, onClose, existingCompanies, onSave }:
     if (isOpen) {
       setCompanyName(''); setPosition(''); setStatus('Bookmarked')
       setType('Internship'); setMode('Ongoing'); setAppliedDate('')
-      setDeadline(''); setLink(''); setNotes(''); setTasks(['']); setErrors({})
+      setDeadline(''); setSalary(''); setLocation(''); setLink(''); setNotes(''); setTasks(['']); setErrors({})
     }
   }, [isOpen])
 
@@ -117,6 +117,8 @@ export function LogPositionModal({ isOpen, onClose, existingCompanies, onSave }:
           status, type, mode,
           applied_date:      appliedDate || null,
           deadline:          deadline    || null,
+          salary:            salary.trim() || null,
+          location:          location.trim() || null,
           link:              link        || null,
           notes:             notes       || null,
           vault_link:        null,
@@ -150,12 +152,12 @@ export function LogPositionModal({ isOpen, onClose, existingCompanies, onSave }:
 
           <div className="px-7 pt-5 pb-4 flex justify-between items-start border-b-2 border-[#b0a0d0]/30">
             <div>
-              <p className="text-[9px] font-black uppercase tracking-widest text-dt-lavender opacity-55 mb-0.5">New Entry</p>
+              <p className="text-[9px] font-black uppercase tracking-widest text-dt-lavender-shd mb-0.5">New Entry</p>
               <h2 className="text-xl font-black tracking-tighter">
-                LOG_POSITION<span className="text-dt-lavender animate-pulse">_</span>
+                LOG_POSITION<span className="text-dt-lavender-shd animate-pulse">_</span>
               </h2>
             </div>
-            <button onClick={onClose} className="text-foreground/30 hover:text-foreground/70 transition-colors font-black text-xl leading-none mt-1">✕</button>
+            <button onClick={onClose} className="text-foreground/55 hover:text-foreground/90 transition-colors font-black text-xl leading-none mt-1">✕</button>
           </div>
 
           <div className="px-7 py-5 flex flex-col gap-4 flex-1">
@@ -176,7 +178,7 @@ export function LogPositionModal({ isOpen, onClose, existingCompanies, onSave }:
                     {suggestions.map(s => (
                       <button key={s} className="w-full text-left px-4 py-2.5 text-sm font-mono hover:bg-[#a898c8]/20 transition-colors"
                         onClick={() => { setCompanyName(s); setShowDrop(false) }}>
-                        {s}<span className="text-[10px] text-dt-lavender opacity-60 ml-2">existing ↑</span>
+                        {s}<span className="text-[10px] text-dt-lavender-shd ml-2">existing ↑</span>
                       </button>
                     ))}
                   </div>
@@ -192,31 +194,31 @@ export function LogPositionModal({ isOpen, onClose, existingCompanies, onSave }:
 
             <div className="grid grid-cols-2 gap-4">
               <Field label="Status">
-                <div className="relative">
-                  <select className={selectClass} value={status} onChange={e => setStatus(e.target.value as ApplicationStatus)}>
-                    {ALL_STATUSES.map(s => <option key={s}>{s}</option>)}
-                  </select>
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none opacity-40 text-xs">▾</span>
-                </div>
+                <Ps1Select
+                  value={status}
+                  onChange={v => setStatus(v as ApplicationStatus)}
+                  options={ALL_STATUSES.map(s => ({ value: s, label: s }))}
+                  aria-label="Status"
+                />
               </Field>
               <Field label="Type">
-                <div className="relative">
-                  <select className={selectClass} value={type} onChange={e => setType(e.target.value as ApplicationType)}>
-                    {ALL_TYPES.map(t => <option key={t}>{t}</option>)}
-                  </select>
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none opacity-40 text-xs">▾</span>
-                </div>
+                <Ps1Select
+                  value={type}
+                  onChange={v => setType(v as ApplicationType)}
+                  options={ALL_TYPES.map(t => ({ value: t, label: t }))}
+                  aria-label="Type"
+                />
               </Field>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <Field label="Mode">
-                <div className="relative">
-                  <select className={selectClass} value={mode} onChange={e => setMode(e.target.value as ApplicationMode)}>
-                    {ALL_MODES.map(m => <option key={m}>{m}</option>)}
-                  </select>
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none opacity-40 text-xs">▾</span>
-                </div>
+                <Ps1Select
+                  value={mode}
+                  onChange={v => setMode(v as ApplicationMode)}
+                  options={ALL_MODES.map(m => ({ value: m, label: m }))}
+                  aria-label="Mode"
+                />
               </Field>
               <Field label="Applied Date">
                 <input type="date" className={inputClass} value={appliedDate} onChange={e => setAppliedDate(e.target.value)} />
@@ -230,13 +232,31 @@ export function LogPositionModal({ isOpen, onClose, existingCompanies, onSave }:
               )}
             </Field>
 
+            <Field label="Salary (USD)">
+              <input
+                className={inputClass}
+                placeholder="$120k–$150k or Competitive"
+                value={salary}
+                onChange={e => setSalary(e.target.value)}
+              />
+            </Field>
+
+            <Field label="Location">
+              <input
+                className={inputClass}
+                placeholder="New York, NY / Remote US"
+                value={location}
+                onChange={e => setLocation(e.target.value)}
+              />
+            </Field>
+
             <Field label="Job Posting URL">
               <input className={inputClass} placeholder="https://…" value={link} onChange={e => setLink(e.target.value)} />
             </Field>
 
             <Field label="Notes">
               <textarea className={`${inputClass} resize-none`} rows={2}
-                placeholder="Referral contact? Salary range? Interesting role?"
+                placeholder="Referral contact? Interesting role?"
                 value={notes} onChange={e => setNotes(e.target.value)} />
             </Field>
 
@@ -251,12 +271,12 @@ export function LogPositionModal({ isOpen, onClose, existingCompanies, onSave }:
                       onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addTask() } }} />
                     {tasks.length > 1 && (
                       <button onClick={() => removeTask(i)}
-                        className="text-foreground/25 hover:text-red-400 transition-colors text-lg leading-none shrink-0">×</button>
+                        className="text-foreground/50 hover:text-red-400 transition-colors text-lg leading-none shrink-0">×</button>
                     )}
                   </div>
                 ))}
                 <button onClick={addTask}
-                  className="text-[11px] font-black uppercase tracking-widest text-dt-lavender opacity-60 hover:opacity-100 transition-opacity text-left mt-1">
+                  className="text-[11px] font-black uppercase tracking-widest text-dt-lavender-shd hover:text-foreground transition-colors text-left mt-1">
                   + add task
                 </button>
               </div>
